@@ -78,4 +78,20 @@ func main() {
 	arrayString := [...]string{"Hello", "World", "Go", "Programming", "Language"} // declaration of an array of type string with 5 elements using short variable declaration and ellipsis to let the compiler determine the size of the array
 
 	fmt.Printf("Type: %T, Value: %v\n", arrayString, arrayString) // return Type: [5]string, Value: [Hello World Go Programming Language]
+
+	title6 := "next lesson is slice"
+
+	fmt.Println(title6)
+	var slice1 = []int{1, 2, 3, 4, 5} // declaration of a slice slice1 of type int with 5 elements
+	slice2 := []int{}
+	slice3 := []string{"Hello", "World", "Go", "Programming", "Language"} // declaration of a slice of type string with 5 elements using short variable declaration
+
+	fmt.Println(slice1)
+	fmt.Println(slice2)
+	fmt.Println(cap(slice2)) // return 0 because the capacity of an empty slice is 0
+	fmt.Println(len(slice2)) // return 0 because the length of an empty slice is 0
+	fmt.Println(slice3)
+	fmt.Println(cap(slice3)) // return 5 because the capacity of a slice is the number of elements in the slice
+	fmt.Println(len(slice3)) // return 5 because the length of a slice is the number of elements in the slice
+
 }
