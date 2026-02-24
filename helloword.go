@@ -65,4 +65,17 @@ func main() {
 	fmt.Printf("Type: %T, Value: %v\n", s2, s2) // return Type: string, Value: Go Programming Language
 	fmt.Printf("Type: %T, Value: %v\n", s3, s3) // return Type: string, Value: Welcome to Go Programming Language
 	fmt.Printf("Type: %T, Value: %v\n", s4, s4) // return Type: string, Value: (empty string)
+
+	s5 := "Lesson about array"
+	fmt.Println(s5)
+
+	var arr1 = [5]int{1, 2, 3, 4, 5} // declaration of an array arr1 of type int with 5 elements
+	arr2 := [...]int{6, 7, 8, 9, 10} // declaration of an array arr2 of type int with 5 elements using short variable declaration and ellipsis to let the compiler determine the size of the array
+
+	fmt.Printf("Type: %T, Value: %v\n", arr1, arr1) // return Type: [5]int, Value: [1 2 3 4 5]
+	fmt.Printf("Type: %T, Value: %v\n", arr2, arr2) // return Type: [5]int, Value: [6 7 8 9 10]
+
+	arrayString := [...]string{"Hello", "World", "Go", "Programming", "Language"} // declaration of an array of type string with 5 elements using short variable declaration and ellipsis to let the compiler determine the size of the array
+
+	fmt.Printf("Type: %T, Value: %v\n", arrayString, arrayString) // return Type: [5]string, Value: [Hello World Go Programming Language]
 }
