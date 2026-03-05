@@ -20,7 +20,7 @@
 Example project structure:
 
 ```
-it-dashboard/
+IT-software-managament/
 ├── backend/
 │   ├── cmd/
 │   ├── config/
