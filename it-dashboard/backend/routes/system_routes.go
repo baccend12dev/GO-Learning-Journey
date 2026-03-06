@@ -8,5 +8,12 @@ import (
 
 func SetupSystemRoutes(router *gin.Engine) {
 
-	router.GET("/systems", controllers.GetSystems)
+	//group routes for system
+	systemGroup := router.Group("/api/systems")
+	{
+		systemGroup.GET("/", controllers.GetSystems)
+		systemGroup.GET("/:id", controllers.GetSystemByID)
+		systemGroup.POST("/", controllers.CreateSystem)
+	}
+
 }

@@ -15,3 +15,17 @@ type System struct {
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }
+
+// System represents the structure of a system in the database.
+// It includes fields such as ID, Name, Type, Links, ServerId, Status, Description, CreatedAt, and UpdatedAt.
+type CreateSystemRequest struct {
+	Name        string `json:"name" binding:"required"`
+	Type        string `json:"type" binding:"required"`
+	Links       string `json:"links" binding:"required"`
+	ServerId    uint   `json:"server_id" binding:"required"`
+	Status      string `json:"status" binding:"required"`
+	Description string `json:"description" binding:"required"`
+}
+
+// CreateSystemRequest represents the expected structure of the request body when creating a new system.
+// It includes fields such as Name, Type, Links, ServerId, Status, and Description, all of which are required.
