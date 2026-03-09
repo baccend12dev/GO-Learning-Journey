@@ -14,6 +14,8 @@ func SetupSystemRoutes(router *gin.Engine) {
 		systemGroup.GET("/", controllers.GetSystems)
 		systemGroup.GET("/:id", controllers.GetSystemByID)
 		systemGroup.POST("/", controllers.CreateSystem)
+		systemGroup.PUT("/:id", controllers.UpdateSystem)
+		systemGroup.DELETE("/:id", controllers.DeleteSystem)
 	}
 
 }

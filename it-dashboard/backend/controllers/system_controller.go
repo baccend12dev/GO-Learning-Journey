@@ -85,3 +85,34 @@ func CreateSystem(c *gin.Context) {
 	})
 
 }
+
+// update function for system
+func UpdateSystem(c *gin.Context) {
+	var system models.System
+	id := c.Param("id")
+	if err := config.DB.First(&system, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Id not found"})
+		return
+	}
+	if err := c.ShouldBindJSON(&system); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	config.DB.Save(&system)
+	c.JSON(http.StatusOK, system)
+}
+
+// DeleteSystem is a handler function that deletes a system from the database based on the provided ID.
+// It retrieves the system record using the ID from the URL parameters, and if found, deletes it from the database.
+// If the system is not found, it returns a 404 Not Found response. If the deletion is successful, it returns a 204 No Content response.
+
+func DeleteSystem(c *gin.Context) {
+	var system models.System
+	id := c.Param("id")
+	if err := config.DB.First(&system, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Id not found"})
+		return
+	}
+	config.DB.Delete(&system)
+	c.JSON(http.StatusNoContent, nil)
+}
