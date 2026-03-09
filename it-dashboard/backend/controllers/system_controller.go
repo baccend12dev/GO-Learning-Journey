@@ -25,7 +25,7 @@ func GetSystems(c *gin.Context) {
 func GetSystemByID(c *gin.Context) {
 	var system models.System
 	id := c.Param("id")
-	if err := config.DB.First(&system, id).Error; err != nil {
+	if err := config.DB.Preload("Server").First(&system, id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Id not found"})
 		return
 	}

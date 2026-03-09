@@ -10,6 +10,7 @@ type System struct {
 	Type        string `gorm:"type:varchar(255)"`
 	Links       string `gorm:"type:varchar(255)"`
 	ServerId    uint
+	Server      Server `gorm:"foreignKey:ServerId"`
 	Status      string `gorm:"type:varchar(255)"`
 	Description string `gorm:"type:varchar(255)"`
 	CreatedAt   time.Time
