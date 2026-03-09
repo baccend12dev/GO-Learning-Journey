@@ -13,6 +13,7 @@ type System struct {
 	Server      Server `gorm:"foreignKey:ServerId"`
 	Status      string `gorm:"type:varchar(255)"`
 	Description string `gorm:"type:varchar(255)"`
+	Notes       []Note `gorm:"foreignKey:SystemId"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }

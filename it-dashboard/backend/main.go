@@ -14,6 +14,7 @@ func main() {
 
 	config.DB.AutoMigrate(&models.System{})
 	config.DB.AutoMigrate(&models.Server{})
+	config.DB.AutoMigrate(&models.Note{})
 
 	r := gin.Default()
 
@@ -25,6 +26,7 @@ func main() {
 
 	routes.SetupSystemRoutes(r)
 	routes.SetupServerRoutes(r)
+	routes.SetupNoteRoutes(r)
 
 	r.Run(":8080")
 }
