@@ -59,6 +59,15 @@ func CreateSystem(c *gin.Context) {
 		})
 		return
 	}
+	// cek apakah server dengan ID yang diberikan ada di database
+	var server models.Server
+	if err := config.DB.First(&server, request.ServerId).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error":   "Server not found",
+			"details": "Server dengan ID tersebut tidak tersedia di database",
+		})
+		return
+	}
 
 	//create system sesuai dengan request body struct
 	system := models.System{
@@ -90,15 +99,29 @@ func CreateSystem(c *gin.Context) {
 func UpdateSystem(c *gin.Context) {
 	var system models.System
 	id := c.Param("id")
+
+	// 1. Cari data lama berdasarkan ID
+	// Gunakan .First() untuk memastikan data memang ada di DB
 	if err := config.DB.First(&system, id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Id not found"})
 		return
 	}
+
+	// 2. Bind JSON dari request body ke struct system
+	// Ini akan menimpa field yang dikirimkan di JSON
 	if err := c.ShouldBindJSON(&system); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	config.DB.Save(&system)
+
+	// 3. Simpan perubahan (Gunakan Updates, bukan Save)
+	// .Model(&system) memastikan GORM tahu record mana yang diupdate (berdasarkan ID)
+	if err := config.DB.Model(&system).Updates(&system).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update database"})
+		return
+	}
+
+	// 4. Kembalikan data yang sudah diperbarui
 	c.JSON(http.StatusOK, system)
 }
 
@@ -109,10 +132,22 @@ func UpdateSystem(c *gin.Context) {
 func DeleteSystem(c *gin.Context) {
 	var system models.System
 	id := c.Param("id")
+
+	// 1. Cari data terlebih dahulu
 	if err := config.DB.First(&system, id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Id not found"})
 		return
 	}
-	config.DB.Delete(&system)
-	c.JSON(http.StatusNoContent, nil)
+
+	// 2. Hapus data
+	if err := config.DB.Delete(&system).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete data"})
+		return
+	}
+
+	// 3. Kembalikan response sukses dengan pesan
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Delete successfully",
+		"id":      id,
+	})
 }
