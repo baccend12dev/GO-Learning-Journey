@@ -8,7 +8,12 @@ import (
 
 func SetupNoteRoutes(router *gin.Engine) {
 
-	//routes for notes
-	router.GET("/api/systems/:id/notes", controllers.GetNotesBySystemID)
-	router.POST("/api/systems/:id/notes", controllers.CreateNote)
+	noteRoutes := router.Group("/api/systems/:id/notes")
+	{
+		noteRoutes.GET("", controllers.GetNotesBySystemID)
+		noteRoutes.POST("", controllers.CreateNote)
+	}
+
+	router.PUT("/api/notes/:id", controllers.UpdateNote)
+	router.DELETE("/api/notes/:id", controllers.DeleteNote)
 }

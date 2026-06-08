@@ -71,3 +71,59 @@ func CreateNote(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, note)
 }
+
+// UpdateNote updates a note's title and content by ID
+func UpdateNote(c *gin.Context) {
+	var note models.Note
+	id := c.Param("id")
+
+	// 1. Verify existence
+	if err := config.DB.First(&note, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Catatan tidak ditemukan"})
+		return
+	}
+
+	// 2. Bind request body
+	var request models.CreateNoteRequest
+	if err := c.ShouldBindJSON(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   "Invalid request body",
+			"details": err.Error(),
+		})
+		return
+	}
+
+	note.Title = request.Title
+	note.Content = request.Content
+
+	if err := config.DB.Save(&note).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal memperbarui catatan di database"})
+		return
+	}
+
+	c.JSON(http.StatusOK, note)
+}
+
+// DeleteNote deletes a note by ID
+func DeleteNote(c *gin.Context) {
+	var note models.Note
+	id := c.Param("id")
+
+	// 1. Check if exists
+	if err := config.DB.First(&note, id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Catatan tidak ditemukan"})
+		return
+	}
+
+	// 2. Delete record
+	if err := config.DB.Delete(&note).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal menghapus catatan"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Catatan deleted successfully",
+		"id":      id,
+	})
+}
+

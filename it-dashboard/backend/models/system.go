@@ -13,8 +13,9 @@ type System struct {
 	Server      Server `gorm:"foreignKey:ServerId"`
 	Status      string `gorm:"type:varchar(255)"`
 	Description string `gorm:"type:varchar(255)"`
-	Notes       []Note `gorm:"foreignKey:SystemId"`
-	CreatedAt   time.Time
+	Notes           []Note           `gorm:"foreignKey:SystemId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"` //delete the child to
+	FeatureRequests []FeatureRequest `gorm:"foreignKey:SystemId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"feature_requests,omitempty"`
+	CreatedAt       time.Time
 	UpdatedAt   time.Time
 }
 
