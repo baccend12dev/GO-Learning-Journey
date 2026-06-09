@@ -15,6 +15,13 @@ import (
 // It queries the database for all system records and returns them to the client.
 // If no systems are found, it returns an empty list.
 // If a database error occurs, it returns an appropriate error response.
+// GetSystems godoc
+// @Summary      Get all systems
+// @Description  Get a list of all systems
+// @Tags         systems
+// @Produce      json
+// @Success      200  {array}   models.System
+// @Router       /api/systems [get]
 func GetSystems(c *gin.Context) {
 	var systems []models.System // Assuming you have a System model defined in your models package
 	config.DB.Find(&systems)
@@ -22,6 +29,15 @@ func GetSystems(c *gin.Context) {
 	c.JSON(http.StatusOK, systems)
 }
 
+// GetSystemByID godoc
+// @Summary      Get system by ID
+// @Description  Get detailed information of a system including server
+// @Tags         systems
+// @Produce      json
+// @Param        id   path      int  true  "System ID"
+// @Success      200  {object}  models.System
+// @Failure      404  {object}  map[string]string "error: Id not found"
+// @Router       /api/systems/{id} [get]
 func GetSystemByID(c *gin.Context) {
 	var system models.System
 	id := c.Param("id")
@@ -49,6 +65,18 @@ func GetSystemByID(c *gin.Context) {
 // }
 
 // recomended create system database entry with request body struct
+// CreateSystem godoc
+// @Summary      Create a new system
+// @Description  Create a new system database entry by providing system fields
+// @Tags         systems
+// @Accept       json
+// @Produce      json
+// @Param        request body   models.CreateSystemRequest  true  "System creation payload"
+// @Success      201  {object}  models.System
+// @Failure      400  {object}  map[string]string "error: Invalid request body"
+// @Failure      404  {object}  map[string]string "error: Server not found"
+// @Failure      500  {object}  map[string]string "error: Failed to create system"
+// @Router       /api/systems [post]
 func CreateSystem(c *gin.Context) {
 	var request models.CreateSystemRequest
 
@@ -96,6 +124,19 @@ func CreateSystem(c *gin.Context) {
 }
 
 // update function for system
+// UpdateSystem godoc
+// @Summary      Update a system
+// @Description  Update details of an existing system by ID
+// @Tags         systems
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "System ID"
+// @Param        request body   models.System  true  "Fields to update"
+// @Success      200  {object}  models.System
+// @Failure      400  {object}  map[string]string "error: Bad request"
+// @Failure      404  {object}  map[string]string "error: Id not found"
+// @Failure      500  {object}  map[string]string "error: Failed to update database"
+// @Router       /api/systems/{id} [put]
 func UpdateSystem(c *gin.Context) {
 	var system models.System
 	id := c.Param("id")
@@ -129,6 +170,16 @@ func UpdateSystem(c *gin.Context) {
 // It retrieves the system record using the ID from the URL parameters, and if found, deletes it from the database.
 // If the system is not found, it returns a 404 Not Found response. If the deletion is successful, it returns a 204 No Content response.
 
+// DeleteSystem godoc
+// @Summary      Delete a system
+// @Description  Delete a system record and its related notes/features from database
+// @Tags         systems
+// @Produce      json
+// @Param        id   path      int  true  "System ID"
+// @Success      200  {object}  map[string]string "message: Delete successfully"
+// @Failure      404  {object}  map[string]string "error: Id not found"
+// @Failure      500  {object}  map[string]string "error: Failed to delete data"
+// @Router       /api/systems/{id} [delete]
 func DeleteSystem(c *gin.Context) {
 	var system models.System
 	id := c.Param("id")

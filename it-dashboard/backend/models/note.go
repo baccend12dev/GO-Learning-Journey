@@ -5,12 +5,12 @@ import (
 )
 
 type Note struct {
-	ID        uint `gorm:"primaryKey"`
-	SystemId  uint
-	Title     string `gorm:"type:varchar(255)"`
-	Content   string `gorm:"type:text"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        uint      `gorm:"primaryKey" json:"id"`
+	SystemId  uint      `json:"system_id"`
+	Title     string    `gorm:"type:varchar(255)" json:"title"`
+	Content   string    `gorm:"type:text" json:"content"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 // Note represents the structure of a note in the database.

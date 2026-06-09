@@ -5,19 +5,19 @@ import (
 )
 
 type System struct {
-	ID          uint   `gorm:"primaryKey"`
-	Name        string `gorm:"type:varchar(255)"`
-	Type        string `gorm:"type:varchar(255)"`
-	Links       string `gorm:"type:varchar(255)"`
-	ServerId    uint
-	Server      Server `gorm:"foreignKey:ServerId"`
-	Status      string `gorm:"type:varchar(255)"`
-	Description string `gorm:"type:varchar(255)"`
-	Notes           []Note           `gorm:"foreignKey:SystemId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"` //delete the child to
+	ID              uint             `gorm:"primaryKey" json:"id"`
+	Name            string           `gorm:"type:varchar(255)" json:"name"`
+	Type            string           `gorm:"type:varchar(255)" json:"type"`
+	Links           string           `gorm:"type:varchar(255)" json:"links"`
+	ServerId        uint             `json:"server_id"`
+	Server          Server           `gorm:"foreignKey:ServerId" json:"server,omitempty"`
+	Status          string           `gorm:"type:varchar(255)" json:"status"`
+	Description     string           `gorm:"type:varchar(255)" json:"description"`
+	Notes           []Note           `gorm:"foreignKey:SystemId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"notes,omitempty"`
 	FeatureRequests []FeatureRequest `gorm:"foreignKey:SystemId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"feature_requests,omitempty"`
 	Documentations  []Documentation  `gorm:"foreignKey:SystemId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"documentations,omitempty"`
-	CreatedAt       time.Time
-	UpdatedAt   time.Time
+	CreatedAt       time.Time        `json:"created_at"`
+	UpdatedAt       time.Time        `json:"updated_at"`
 }
 
 // System represents the structure of a system in the database.

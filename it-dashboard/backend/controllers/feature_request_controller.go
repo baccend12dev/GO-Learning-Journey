@@ -10,6 +10,15 @@ import (
 )
 
 // GetFeatureRequestsBySystemID retrieves all feature requests for a specific system
+// GetFeatureRequestsBySystemID godoc
+// @Summary      Get feature requests by system ID
+// @Description  Get a list of feature requests associated with a specific system
+// @Tags         feature-requests
+// @Produce      json
+// @Param        id   path      int  true  "System ID"
+// @Success      200  {array}   models.FeatureRequest
+// @Failure      500  {object}  map[string]string "error: Gagal mengambil data feature request"
+// @Router       /api/systems/{id}/feature-requests [get]
 func GetFeatureRequestsBySystemID(c *gin.Context) {
 	systemID := c.Param("id")
 	var featureRequests []models.FeatureRequest
@@ -26,6 +35,19 @@ func GetFeatureRequestsBySystemID(c *gin.Context) {
 }
 
 // CreateFeatureRequest creates a new feature request for a system
+// CreateFeatureRequest godoc
+// @Summary      Create a new feature request
+// @Description  Create a new feature request for a system
+// @Tags         feature-requests
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "System ID"
+// @Param        request body   models.CreateFeatureRequest  true  "Feature request payload"
+// @Success      201  {object}  models.FeatureRequest
+// @Failure      400  {object}  map[string]string "error: ID System tidak valid / Invalid request body"
+// @Failure      404  {object}  map[string]string "error: System tidak ditemukan"
+// @Failure      500  {object}  map[string]string "error: Gagal menyimpan ke database"
+// @Router       /api/systems/{id}/feature-requests [post]
 func CreateFeatureRequest(c *gin.Context) {
 	systemIDStr := c.Param("id")
 	val, err := strconv.ParseUint(systemIDStr, 10, 32)
@@ -71,6 +93,19 @@ func CreateFeatureRequest(c *gin.Context) {
 }
 
 // UpdateFeatureRequest updates a feature request details (title, description, status)
+// UpdateFeatureRequest godoc
+// @Summary      Update a feature request
+// @Description  Update details/status of an existing feature request by feature request ID
+// @Tags         feature-requests
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "Feature Request ID"
+// @Param        request body   models.UpdateFeatureRequest  true  "Feature request update payload"
+// @Success      200  {object}  models.FeatureRequest
+// @Failure      400  {object}  map[string]string "error: Bad request"
+// @Failure      404  {object}  map[string]string "error: Feature Request tidak ditemukan"
+// @Failure      500  {object}  map[string]string "error: Gagal memperbarui database"
+// @Router       /api/feature-requests/{id} [put]
 func UpdateFeatureRequest(c *gin.Context) {
 	var featureRequest models.FeatureRequest
 	id := c.Param("id")
@@ -113,6 +148,16 @@ func UpdateFeatureRequest(c *gin.Context) {
 }
 
 // DeleteFeatureRequest deletes a feature request by ID
+// DeleteFeatureRequest godoc
+// @Summary      Delete a feature request
+// @Description  Delete a feature request record from database by feature request ID
+// @Tags         feature-requests
+// @Produce      json
+// @Param        id   path      int  true  "Feature Request ID"
+// @Success      200  {object}  map[string]string "message: Feature Request deleted successfully"
+// @Failure      404  {object}  map[string]string "error: Feature Request tidak ditemukan"
+// @Failure      500  {object}  map[string]string "error: Gagal menghapus data"
+// @Router       /api/feature-requests/{id} [delete]
 func DeleteFeatureRequest(c *gin.Context) {
 	var featureRequest models.FeatureRequest
 	id := c.Param("id")

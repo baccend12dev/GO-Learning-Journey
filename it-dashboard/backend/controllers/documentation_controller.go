@@ -10,6 +10,16 @@ import (
 )
 
 // GetDocumentationsBySystemID retrieves all documentation entries for a specific system (with optional category filter)
+// GetDocumentationsBySystemID godoc
+// @Summary      Get system documentations
+// @Description  Get a list of documentations associated with a system ID, optionally filtered by category
+// @Tags         documentations
+// @Produce      json
+// @Param        id        path      int     true   "System ID"
+// @Param        category  query     string  false  "Optional category filter"
+// @Success      200  {array}   models.Documentation
+// @Failure      500  {object}  map[string]string "error: Gagal mengambil data dokumentasi"
+// @Router       /api/systems/{id}/documentations [get]
 func GetDocumentationsBySystemID(c *gin.Context) {
 	systemID := c.Param("id")
 	categoryQuery := c.Query("category")
@@ -31,6 +41,15 @@ func GetDocumentationsBySystemID(c *gin.Context) {
 }
 
 // GetDocumentationByID retrieves a single documentation record by ID
+// GetDocumentationByID godoc
+// @Summary      Get documentation by ID
+// @Description  Get details of a single documentation entry by ID
+// @Tags         documentations
+// @Produce      json
+// @Param        id   path      int  true  "Documentation ID"
+// @Success      200  {object}  models.Documentation
+// @Failure      404  {object}  map[string]string "error: Dokumentasi tidak ditemukan"
+// @Router       /api/documentations/{id} [get]
 func GetDocumentationByID(c *gin.Context) {
 	var doc models.Documentation
 	id := c.Param("id")
@@ -44,6 +63,19 @@ func GetDocumentationByID(c *gin.Context) {
 }
 
 // CreateDocumentation creates a new documentation entry for a system
+// CreateDocumentation godoc
+// @Summary      Create documentation
+// @Description  Create a new documentation entry for a system
+// @Tags         documentations
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "System ID"
+// @Param        request body   models.CreateDocumentationRequest  true  "Documentation payload"
+// @Success      201  {object}  models.Documentation
+// @Failure      400  {object}  map[string]string "error: ID System tidak valid / Invalid payload / Kategori tidak valid"
+// @Failure      404  {object}  map[string]string "error: System tidak ditemukan"
+// @Failure      500  {object}  map[string]string "error: Gagal menyimpan ke database"
+// @Router       /api/systems/{id}/documentations [post]
 func CreateDocumentation(c *gin.Context) {
 	systemIDStr := c.Param("id")
 	val, err := strconv.ParseUint(systemIDStr, 10, 32)
@@ -97,6 +129,19 @@ func CreateDocumentation(c *gin.Context) {
 }
 
 // UpdateDocumentation updates a documentation entry
+// UpdateDocumentation godoc
+// @Summary      Update documentation
+// @Description  Update details of an existing documentation entry by ID
+// @Tags         documentations
+// @Accept       json
+// @Produce      json
+// @Param        id   path      int  true  "Documentation ID"
+// @Param        request body   models.UpdateDocumentationRequest  true  "Documentation update fields"
+// @Success      200  {object}  models.Documentation
+// @Failure      400  {object}  map[string]string "error: Invalid payload / Kategori tidak valid"
+// @Failure      404  {object}  map[string]string "error: Dokumentasi tidak ditemukan"
+// @Failure      500  {object}  map[string]string "error: Gagal memperbarui database"
+// @Router       /api/documentations/{id} [put]
 func UpdateDocumentation(c *gin.Context) {
 	var doc models.Documentation
 	id := c.Param("id")
@@ -147,6 +192,16 @@ func UpdateDocumentation(c *gin.Context) {
 }
 
 // DeleteDocumentation deletes a documentation entry
+// DeleteDocumentation godoc
+// @Summary      Delete documentation
+// @Description  Delete a documentation entry from database by ID
+// @Tags         documentations
+// @Produce      json
+// @Param        id   path      int  true  "Documentation ID"
+// @Success      200  {object}  map[string]string "message: Dokumentasi deleted successfully"
+// @Failure      404  {object}  map[string]string "error: Dokumentasi tidak ditemukan"
+// @Failure      500  {object}  map[string]string "error: Gagal menghapus dokumentasi"
+// @Router       /api/documentations/{id} [delete]
 func DeleteDocumentation(c *gin.Context) {
 	var doc models.Documentation
 	id := c.Param("id")
