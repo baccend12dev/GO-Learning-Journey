@@ -5,10 +5,12 @@ import (
 	"backend/models"
 	"backend/routes"
 	"backend/utils"
+	"os"
 
 	_ "backend/docs"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -20,7 +22,11 @@ import (
 // @BasePath        /
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		allowedOrigin := os.Getenv("ALLOWED_ORIGIN")
+		if allowedOrigin == "" {
+			allowedOrigin = "*"
+		}
+		c.Writer.Header().Set("Access-Control-Allow-Origin", allowedOrigin)
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
@@ -35,6 +41,8 @@ func CORSMiddleware() gin.HandlerFunc {
 }
 
 func main() {
+	// Load environment variables from .env file for local development
+	_ = godotenv.Load(".env", "../.env")
 
 	config.ConnectDatabase()
 
@@ -81,5 +89,9 @@ func main() {
 	routes.SetupFeatureRequestRoutes(r)
 	routes.SetupDocumentationRoutes(r)
 
-	r.Run(":8080")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+	r.Run(":" + port)
 }
