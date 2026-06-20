@@ -177,3 +177,54 @@ func TestDeleteFeatureRequest(t *testing.T) {
 		t.Errorf("Expected status code %d, but got %d", http.StatusOK, w.Code)
 	}
 }
+
+func TestGetPendingFeatureRequests(t *testing.T) {
+	setupFeatureRequestTestDB(t)
+
+	// Seed system & feature requests
+	system := models.System{Name: "Core Portal"}
+	config.DB.Create(&system)
+
+	requests := []models.FeatureRequest{
+		{SystemId: system.ID, Title: "Pending Request 1", Description: "Desc 1", Status: "Pending"},
+		{SystemId: system.ID, Title: "In Progress Request", Description: "Desc 2", Status: "In Progress"},
+		{SystemId: system.ID, Title: "Pending Request 2", Description: "Desc 3", Status: "Pending"},
+	}
+	for _, req := range requests {
+		config.DB.Create(&req)
+	}
+
+	r := gin.Default()
+	routes.SetupFeatureRequestRoutes(r)
+
+	token := generateTestToken(t, "Viewer")
+
+	req, _ := http.NewRequest(http.MethodGet, "/api/feature-requests/pending", nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+	w := httptest.NewRecorder()
+
+	r.ServeHTTP(w, req)
+
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected status code %d, but got %d", http.StatusOK, w.Code)
+	}
+
+	var response []models.FeatureRequest
+	err := json.Unmarshal(w.Body.Bytes(), &response)
+	if err != nil {
+		t.Fatalf("Failed to unmarshal response: %v", err)
+	}
+
+	if len(response) != 2 {
+		t.Errorf("Expected 2 pending feature requests, but got %d", len(response))
+	}
+
+	for _, item := range response {
+		if item.Status != "Pending" {
+			t.Errorf("Expected status to be 'Pending', but got '%s'", item.Status)
+		}
+		if item.System == nil || item.System.Name != "Core Portal" {
+			t.Errorf("Expected associated system metadata to be preloaded, but got nil or mismatch")
+		}
+	}
+}

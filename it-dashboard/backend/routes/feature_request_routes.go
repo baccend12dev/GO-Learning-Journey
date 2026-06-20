@@ -20,6 +20,13 @@ func SetupFeatureRequestRoutes(router *gin.Engine) {
 		}
 	}
 
+	// Add pending feature requests route (shared resource across systems)
+	pendingGroup := router.Group("/api/feature-requests/pending")
+	pendingGroup.Use(middleware.AuthMiddleware())
+	{
+		pendingGroup.GET("", controllers.GetPendingFeatureRequests)
+	}
+
 	featureIndividual := router.Group("/api/feature-requests/:id")
 	featureIndividual.Use(middleware.AuthMiddleware(), middleware.RoleMiddleware("Administrator", "Developer"))
 	{

@@ -5,6 +5,7 @@ import { SystemsOverview } from './views/SystemsOverview';
 import { ServersOverview } from './views/ServersOverview';
 import { SystemDetail } from './views/SystemDetail';
 import { GlobalAddDocumentation } from './views/GlobalAddDocumentation';
+import { PendingRequests } from './views/PendingRequests';
 import { Outlet } from '@tanstack/react-router';
 
 // 1. Root route
@@ -61,6 +62,13 @@ const createDocumentationRoute = createRoute({
   component: GlobalAddDocumentation,
 });
 
+// 9. Pending feature requests route
+const pendingRequestsRoute = createRoute({
+  getParentRoute: () => dashboardRoute,
+  path: '/pending-requests',
+  component: PendingRequests,
+});
+
 // Build route tree
 const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -70,6 +78,7 @@ const routeTree = rootRoute.addChildren([
     serversRoute,
     systemDetailRoute,
     createDocumentationRoute,
+    pendingRequestsRoute,
   ]),
 ]);
 

@@ -179,3 +179,24 @@ func DeleteFeatureRequest(c *gin.Context) {
 		"id":      id,
 	})
 }
+
+// GetPendingFeatureRequests retrieves all feature requests with 'Pending' status across all systems
+// GetPendingFeatureRequests godoc
+// @Summary      Get all pending feature requests
+// @Description  Get a list of all pending feature requests preloaded with system info
+// @Tags         feature-requests
+// @Produce      json
+// @Success      200  {array}   models.FeatureRequest
+// @Failure      500  {object}  map[string]string "error: Gagal mengambil data pending requests"
+// @Router       /api/feature-requests/pending [get]
+func GetPendingFeatureRequests(c *gin.Context) {
+	var featureRequests []models.FeatureRequest
+
+	// Fetch all where status is 'Pending' and preload their associated System
+	if err := config.DB.Preload("System").Where("status = ?", "Pending").Find(&featureRequests).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Gagal mengambil data pending requests"})
+		return
+	}
+
+	c.JSON(http.StatusOK, featureRequests)
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, Link, useNavigate, useLocation } from '@tanstack/react-router';
 import { useAuth } from '../context/AuthContext';
-import { LayoutDashboard, BookOpen, LogOut, ShieldAlert, Cpu, Server as ServerIcon } from 'lucide-react';
+import { LayoutDashboard, BookOpen, LogOut, ShieldAlert, Cpu, Server as ServerIcon, Clock } from 'lucide-react';
 
 export const DashboardLayout: React.FC = () => {
   const { user, isAuthenticated, isLoading, logout } = useAuth();
@@ -45,6 +45,8 @@ export const DashboardLayout: React.FC = () => {
     headerTitle = 'Host Servers Pool';
   } else if (location.pathname.includes('/documentations/new')) {
     headerTitle = 'Create Global System Documentation';
+  } else if (location.pathname.includes('/pending-requests')) {
+    headerTitle = 'Pending Feature Requests';
   }
 
   return (
@@ -81,6 +83,14 @@ export const DashboardLayout: React.FC = () => {
           >
             <BookOpen size={18} />
             <span>Add Documentation</span>
+          </Link>
+
+          <Link
+            to="/dashboard/pending-requests"
+            className={`sidebar-item ${location.pathname.includes('/pending-requests') ? 'active' : ''}`}
+          >
+            <Clock size={18} />
+            <span>Pending Requests</span>
           </Link>
         </nav>
 
